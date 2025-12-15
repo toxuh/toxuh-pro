@@ -1,3 +1,7 @@
+# Ignore Synology @eaDir everywhere
+**/@eaDir
+@eaDir
+
 # Dependencies
 node_modules
 .pnp

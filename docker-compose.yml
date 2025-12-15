@@ -1,18 +1,53 @@
+version: "3.9"
+
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SITE_URL: "https://toxuh.pro"
+    image: toxuh-pro:latest
     container_name: toxuh-pro
     restart: unless-stopped
-    ports:
-      - "3000:3000"
     environment:
-      - NODE_ENV=production
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+      NODE_ENV: "production"
+      PORT: "3000"
+      HOSTNAME: "0.0.0.0"
+      NEXT_PUBLIC_SITE_URL: "https://toxuh.pro"
+      NEXT_TELEMETRY_DISABLED: "1"
+    expose:
+      - "3000"
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
 
+      # HTTPS router (Let's Encrypt через уже существующий Traefik)
+      - "traefik.http.routers.toxuh-pro.rule=Host(`toxuh.pro`)"
+      - "traefik.http.routers.toxuh-pro.entrypoints=websecure"
+      - "traefik.http.routers.toxuh-pro.tls=true"
+      - "traefik.http.routers.toxuh-pro.tls.certresolver=letsencrypt"
+
+      # Service/port mapping
+      - "traefik.http.routers.toxuh-pro.service=toxuh-pro"
+      - "traefik.http.services.toxuh-pro.loadbalancer.server.port=3000"
+
+      # HTTP -> HTTPS redirect
+      - "traefik.http.routers.toxuh-pro-http.rule=Host(`toxuh.pro`)"
+      - "traefik.http.routers.toxuh-pro-http.entrypoints=web"
+      - "traefik.http.routers.toxuh-pro-http.middlewares=toxuh-pro-redirect@docker"
+      - "traefik.http.middlewares.toxuh-pro-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.toxuh-pro-redirect.redirectscheme.permanent=true"
+
+      # Basic security headers
+      - "traefik.http.middlewares.secure-headers.headers.frameDeny=true"
+      - "traefik.http.middlewares.secure-headers.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.secure-headers.headers.stsSeconds=31536000"
+      - "traefik.http.middlewares.secure-headers.headers.stsIncludeSubdomains=true"
+      - "traefik.http.routers.toxuh-pro.middlewares=secure-headers@docker"
+
+networks:
+  web:
+    external: true
