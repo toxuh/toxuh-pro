@@ -2,6 +2,8 @@ import { type ReactNode } from "react";
 import { type Metadata } from "next";
 import { Instrument_Serif, Space_Mono } from "next/font/google";
 
+import { ThemeProvider } from "@/components/theme-provider";
+
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -102,11 +104,18 @@ interface RootLayoutProps {
 }
 
 const RootLayout = ({ children }: Readonly<RootLayoutProps>) => (
-  <html lang="en">
+  <html lang="en" suppressHydrationWarning>
     <body
       className={`${instrumentSerif.variable} ${spaceMono.variable} antialiased`}
     >
-      {children}
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        {children}
+      </ThemeProvider>
     </body>
   </html>
 );
