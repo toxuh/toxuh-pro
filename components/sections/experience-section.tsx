@@ -109,7 +109,7 @@ const ExperienceSection = () => {
   const [canScrollHorizontally, setCanScrollHorizontally] = useState(true);
 
   const currentIndexRef = useRef(0);
-  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const cardsRef = useRef<(HTMLElement | null)[]>([]);
 
   const handleScroll = () => {
     const container = scrollContainerRef.current;
@@ -173,12 +173,17 @@ const ExperienceSection = () => {
     <section
       ref={sectionRef}
       className="relative flex min-h-svh snap-start flex-col overflow-hidden"
+      aria-labelledby="experience-heading"
     >
       <div className="flex items-start justify-between px-8 py-12 md:px-16 md:py-16 lg:px-24">
-        <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.3em] text-[var(--text-subtle)]">
+        <span
+          className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.3em] text-[var(--text-subtle)]"
+          aria-hidden="true"
+        >
           03
         </span>
         <h2
+          id="experience-heading"
           className="font-[family-name:var(--font-serif)] text-[clamp(2rem,5vw,4rem)] leading-[0.9] tracking-[-0.03em] text-[var(--text)]"
           style={{ fontStyle: "italic" }}
         >
@@ -191,9 +196,11 @@ const ExperienceSection = () => {
         className="scrollbar-hide flex flex-1 gap-8 overflow-x-auto snap-x snap-mandatory px-8 md:px-16 lg:px-24 scroll-pl-8 md:scroll-pl-16 lg:scroll-pl-24"
         onScroll={handleScroll}
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        role="list"
+        aria-label="Work experience timeline"
       >
         {EXPERIENCES.map((exp, index) => (
-          <div
+          <article
             key={exp.company}
             ref={(el) => {
               cardsRef.current[index] = el;
@@ -204,9 +211,10 @@ const ExperienceSection = () => {
               transform: isVisible ? "translateY(0)" : "translateY(20px)",
               transition: `opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * 100}ms, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * 100}ms`,
             }}
+            aria-label={`${exp.role} at ${exp.company}, ${exp.period}`}
           >
             <div className="flex flex-col gap-6 md:flex-row md:gap-12 lg:gap-20">
-              <div className="relative flex flex-col">
+              <div className="relative flex flex-col" aria-hidden="true">
                 <span className="absolute -mt-8 ml-3 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)]">
                   {exp.startYear} —
                 </span>
@@ -232,51 +240,72 @@ const ExperienceSection = () => {
                   <span className="font-[family-name:var(--font-mono)] text-sm text-[var(--text-muted)] md:text-base">
                     {exp.role}
                   </span>
-                  <span className="h-1 w-1 rounded-full bg-[var(--text-subtle)]" />
+                  <span
+                    className="h-1 w-1 rounded-full bg-[var(--text-subtle)]"
+                    aria-hidden="true"
+                  />
                   <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--text-subtle)]">
                     {exp.location}
                   </span>
                 </div>
 
-                <ul className="mb-6 space-y-2">
+                <ul className="mb-6 space-y-2" aria-label="Key achievements">
                   {exp.highlights.map((highlight, i) => (
                     <li
                       key={i}
                       className="flex items-start gap-3 font-[family-name:var(--font-mono)] text-xs leading-relaxed text-[var(--text-muted)] md:text-sm"
                     >
-                      <span className="mt-2 h-px w-4 flex-shrink-0 bg-[var(--text-subtle)]" />
+                      <span
+                        className="mt-2 h-px w-4 flex-shrink-0 bg-[var(--text-subtle)]"
+                        aria-hidden="true"
+                      />
                       {highlight}
                     </li>
                   ))}
                 </ul>
 
-                <div className="flex flex-wrap gap-2">
+                <ul
+                  className="flex flex-wrap gap-2"
+                  aria-label="Technologies used"
+                >
                   {exp.stack.map((tech) => (
-                    <span
+                    <li
                       key={tech}
                       className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.1em] text-[var(--text-subtle)] transition-colors duration-300 hover:text-[var(--text-muted)]"
                     >
                       {tech}
-                    </span>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             </div>
-          </div>
+          </article>
         ))}
-        <div className="w-[15vw] flex-shrink-0 md:w-[20vw] lg:w-[25vw]" />
+        <div
+          className="w-[15vw] flex-shrink-0 md:w-[20vw] lg:w-[25vw]"
+          aria-hidden="true"
+        />
       </div>
 
-      <div className="px-8 pb-12 pt-8 md:px-16 md:pb-16 lg:px-24">
+      <nav
+        className="px-8 pb-12 pt-8 md:px-16 md:pb-16 lg:px-24"
+        aria-label="Experience timeline navigation"
+      >
         <div className="relative">
-          <div className="absolute left-0 right-0 top-1 h-px bg-[var(--text-subtle)]" />
+          <div
+            className="absolute left-0 right-0 top-1 h-px bg-[var(--text-subtle)]"
+            aria-hidden="true"
+          />
 
-          <div className="relative flex justify-between">
+          <div className="relative flex justify-between" role="tablist">
             {EXPERIENCES.map((exp, index) => (
               <button
                 key={exp.company}
                 onClick={() => scrollToCard(index)}
                 className="group flex flex-col items-center gap-2"
+                role="tab"
+                aria-selected={activeIndex === index}
+                aria-label={`View ${exp.company} experience (${exp.period})`}
               >
                 <div
                   className={`h-2 w-2 rounded-full transition-all duration-500 ${
@@ -284,6 +313,7 @@ const ExperienceSection = () => {
                       ? "scale-150 bg-[var(--text)]"
                       : "bg-[var(--text-subtle)] group-hover:bg-[var(--text-muted)]"
                   }`}
+                  aria-hidden="true"
                 />
                 <span
                   className={`font-[family-name:var(--font-mono)] text-[9px] tracking-[0.1em] transition-colors duration-300 md:text-[10px] ${
@@ -303,11 +333,14 @@ const ExperienceSection = () => {
           <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--text-subtle)]">
             10+ years in web development
           </span>
-          <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--text-subtle)]">
+          <span
+            className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--text-subtle)]"
+            aria-hidden="true"
+          >
             {canScrollHorizontally ? "← Scroll →" : ""}
           </span>
         </div>
-      </div>
+      </nav>
     </section>
   );
 };

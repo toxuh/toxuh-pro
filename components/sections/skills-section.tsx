@@ -64,12 +64,17 @@ const SkillsSection = () => {
     <section
       ref={sectionRef}
       className="relative flex min-h-svh snap-start flex-col justify-between overflow-hidden px-8 py-12 md:px-16 md:py-16 lg:px-24"
+      aria-labelledby="skills-heading"
     >
       <div className="flex items-start justify-between">
-        <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.3em] text-[var(--text-subtle)]">
+        <span
+          className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.3em] text-[var(--text-subtle)]"
+          aria-hidden="true"
+        >
           02
         </span>
         <h2
+          id="skills-heading"
           className="font-[family-name:var(--font-serif)] text-[clamp(2rem,5vw,4rem)] leading-[0.9] tracking-[-0.03em] text-[var(--text)]"
           style={{ fontStyle: "italic" }}
         >
@@ -77,12 +82,13 @@ const SkillsSection = () => {
         </h2>
       </div>
 
-      <div
+      <ul
         className={`flex flex-1 items-center py-8 transition-opacity duration-1000 ${
           isVisible ? "opacity-100" : "opacity-0"
         }`}
+        aria-label="Technical and soft skills"
       >
-        <div className="flex w-full flex-wrap items-baseline gap-x-[clamp(1rem,3vw,3rem)] gap-y-8">
+        <li className="flex w-full flex-wrap items-baseline gap-x-[clamp(1rem,3vw,3rem)] gap-y-8">
           {SKILLS.map((skill, index) => {
             const style: CSSProperties = {
               opacity: isVisible ? 1 : 0,
@@ -107,15 +113,18 @@ const SkillsSection = () => {
                   {skill.name}
                 </span>
                 {skill.note && (
-                  <span className="ml-1 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.1em] text-[var(--text-subtle)] transition-colors duration-300 group-hover:text-[var(--text-muted)] md:ml-2 md:text-[11px]">
+                  <span
+                    className="ml-1 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.1em] text-[var(--text-subtle)] transition-colors duration-300 group-hover:text-[var(--text-muted)] md:ml-2 md:text-[11px]"
+                    aria-label={skill.note}
+                  >
                     {skill.note}
                   </span>
                 )}
               </span>
             );
           })}
-        </div>
-      </div>
+        </li>
+      </ul>
 
       <div className="flex justify-between">
         <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--text-subtle)]">

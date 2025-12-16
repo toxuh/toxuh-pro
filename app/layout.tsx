@@ -1,10 +1,38 @@
 import { type ReactNode } from "react";
 import { type Metadata } from "next";
+import Script from "next/script";
 import { Instrument_Serif, Space_Mono } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
 
 import "./globals.css";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Anton Zakharov",
+  url: "https://toxuh.pro",
+  email: "me@toxuh.pro",
+  jobTitle: "Frontend Developer",
+  description:
+    "Frontend developer specializing in React, Next.js, and TypeScript. Building performant, accessible, and scalable web applications.",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Zaragoza",
+    addressCountry: "Spain",
+  },
+  sameAs: ["https://github.com/toxuh", "https://linkedin.com/in/toxuh"],
+  knowsAbout: [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "JavaScript",
+    "Frontend Development",
+    "Web Development",
+    "Tailwind CSS",
+    "Node.js",
+  ],
+};
 
 const instrumentSerif = Instrument_Serif({
   variable: "--font-serif",
@@ -105,6 +133,13 @@ interface RootLayoutProps {
 
 const RootLayout = ({ children }: Readonly<RootLayoutProps>) => (
   <html lang="en" suppressHydrationWarning>
+    <head>
+      <Script
+        id="json-ld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+    </head>
     <body
       className={`${instrumentSerif.variable} ${spaceMono.variable} antialiased`}
     >
