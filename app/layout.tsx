@@ -13,9 +13,9 @@ const jsonLd = {
   name: "Anton Zakharov",
   url: "https://toxuh.pro",
   email: "me@toxuh.pro",
-  jobTitle: "Frontend Developer",
+  jobTitle: "Frontend Engineer",
   description:
-    "Frontend developer specializing in React, Next.js, and TypeScript. Building performant, accessible, and scalable web applications.",
+    "Frontend engineer specializing in React, Next.js, and TypeScript. Building performant, accessible, and scalable web applications.",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Zaragoza",
@@ -48,11 +48,11 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Anton Zakharov — Frontend Developer",
+  title: "Anton Zakharov — Frontend Engineer",
   description:
-    "Frontend developer specializing in React, Next.js, and TypeScript. Building performant, accessible, and scalable web applications.",
+    "Frontend engineer specializing in React, Next.js, and TypeScript. Building performant, accessible, and scalable web applications.",
   keywords: [
-    "Frontend Developer",
+    "Frontend Engineer",
     "React Developer",
     "Next.js Developer",
     "TypeScript",
@@ -73,15 +73,15 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://toxuh.pro",
     siteName: "Anton Zakharov",
-    title: "Anton Zakharov — Frontend Developer",
+    title: "Anton Zakharov — Frontend Engineer",
     description:
-      "Frontend developer specializing in React, Next.js, and TypeScript. Building performant, accessible, and scalable web applications.",
+      "Frontend engineer specializing in React, Next.js, and TypeScript. Building performant, accessible, and scalable web applications.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anton Zakharov — Frontend Developer",
+    title: "Anton Zakharov — Frontend Engineer",
     description:
-      "Frontend developer specializing in React, Next.js, and TypeScript. Building performant, accessible, and scalable web applications.",
+      "Frontend engineer specializing in React, Next.js, and TypeScript. Building performant, accessible, and scalable web applications.",
     creator: "@toxuh",
   },
   robots: {

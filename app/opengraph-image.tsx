@@ -1,15 +1,16 @@
 import { ImageResponse } from "next/og";
+import { loadGoogleFont } from "@/lib/loadGoogleFont";
 
 export const runtime = "edge";
 
-export const alt = "Anton Zakharov — Frontend Developer";
+export const alt = "Anton Zakharov — Frontend Engineer";
 export const size = {
   width: 1200,
   height: 630,
 };
 export const contentType = "image/png";
 
-const OGImage = () =>
+const OGImage = async () =>
   new ImageResponse(
     <div
       style={{
@@ -41,7 +42,7 @@ const OGImage = () =>
             lineHeight: 0.9,
             letterSpacing: "-0.03em",
             margin: 0,
-            fontFamily: "serif",
+            fontFamily: "Instrument Serif",
           }}
         >
           Anton
@@ -55,7 +56,7 @@ const OGImage = () =>
             letterSpacing: "-0.03em",
             margin: 0,
             marginTop: 10,
-            fontFamily: "serif",
+            fontFamily: "Instrument Serif",
           }}
         >
           Zakharov
@@ -76,7 +77,7 @@ const OGImage = () =>
             letterSpacing: "0.35em",
             textTransform: "uppercase",
             margin: 0,
-            fontFamily: "monospace",
+            fontFamily: "Space Mono",
           }}
         >
           Frontend Engineer
@@ -89,7 +90,7 @@ const OGImage = () =>
           fontSize: 16,
           color: "rgba(250, 250, 250, 0.35)",
           letterSpacing: "0.2em",
-          fontFamily: "monospace",
+          fontFamily: "Space Mono",
         }}
       >
         toxuh.pro
@@ -97,6 +98,26 @@ const OGImage = () =>
     </div>,
     {
       ...size,
+      fonts: [
+        {
+          name: "Instrument Serif",
+          data: await loadGoogleFont({ family: "Instrument Serif", weight: "400", ital: 0 }),
+          weight: 400,
+          style: "normal",
+        },
+        {
+          name: "Instrument Serif",
+          data: await loadGoogleFont({ family: "Instrument Serif", weight: "400", ital: 1 }),
+          weight: 400,
+          style: "italic",
+        },
+        {
+          name: "Space Mono",
+          data: await loadGoogleFont({ family: "Space Mono", weight: "400" }),
+          weight: 400,
+          style: "normal",
+        },
+      ],
     },
   );
 
