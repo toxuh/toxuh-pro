@@ -9,16 +9,16 @@
 :root {
   --bg: #fafafa;
   --text: #0a0a0a;
-  --text-muted: rgba(10, 10, 10, 0.5);
-  --text-subtle: rgba(10, 10, 10, 0.15);
+  --text-muted: rgba(10, 10, 10, 1);
+  --text-subtle: rgba(10, 10, 10, 0.5);
   --grid-color: rgba(0, 0, 0, 0.06);
 }
 
 .dark {
   --bg: #050505;
   --text: #fafafa;
-  --text-muted: rgba(250, 250, 250, 0.4);
-  --text-subtle: rgba(250, 250, 250, 0.15);
+  --text-muted: rgba(250, 250, 250, 0.5);
+  --text-subtle: rgba(250, 250, 250, 0.35);
   --grid-color: rgba(255, 255, 255, 0.03);
 }
 

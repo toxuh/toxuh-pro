@@ -1,6 +1,8 @@
 "use client";
 
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { type CSSProperties } from "react";
+
+import { useInView } from "@/hooks/use-in-view";
 
 interface Skill {
   name: string;
@@ -56,26 +58,7 @@ const sizeClasses: Record<Skill["size"], string> = {
 };
 
 const SkillsSection = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
+  const { ref: sectionRef, isInView: isVisible } = useInView<HTMLElement>();
 
   return (
     <section
@@ -136,10 +119,7 @@ const SkillsSection = () => {
 
       <div className="flex justify-between">
         <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--text-subtle)]">
-          10+ years experience
-        </span>
-        <span className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--text-subtle)]">
-          Frontend Lead
+          Fullstack capable
         </span>
       </div>
     </section>
