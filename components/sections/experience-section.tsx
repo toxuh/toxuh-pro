@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 
+import { LongArrowLeft, LongArrowRight } from "@/components/ui/long-arrows";
 import { useInView } from "@/hooks/use-in-view";
 
 interface Experience {
@@ -106,7 +107,6 @@ const ExperienceSection = () => {
   });
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [canScrollHorizontally, setCanScrollHorizontally] = useState(true);
 
   const currentIndexRef = useRef(0);
   const cardsRef = useRef<(HTMLElement | null)[]>([]);
@@ -138,7 +138,6 @@ const ExperienceSection = () => {
 
     currentIndexRef.current = closestIndex;
     setActiveIndex(closestIndex);
-    setCanScrollHorizontally(closestIndex < EXPERIENCES.length - 1);
   };
 
   const scrollToCard = (index: number) => {
@@ -165,9 +164,10 @@ const ExperienceSection = () => {
       left: targetLeft,
       behavior: "smooth",
     });
-
-    setCanScrollHorizontally(clampedIndex < EXPERIENCES.length - 1);
   };
+
+  const goPrev = () => scrollToCard(activeIndex - 1);
+  const goNext = () => scrollToCard(activeIndex + 1);
 
   return (
     <section
@@ -291,6 +291,39 @@ const ExperienceSection = () => {
         className="px-8 pb-12 pt-8 md:px-16 md:pb-16 lg:px-24"
         aria-label="Experience timeline navigation"
       >
+        <div className="mb-4 flex justify-end">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={goPrev}
+              className="group"
+              aria-label="Previous experience"
+              disabled={activeIndex === 0}
+            >
+              <LongArrowLeft
+                className={`h-2.5 w-10 transition-all duration-300 md:h-3 md:w-12 ${
+                  activeIndex === 0
+                    ? "text-[var(--text-subtle)] opacity-30"
+                    : "text-[var(--text-subtle)] group-hover:-translate-x-1 group-hover:text-[var(--text)]"
+                }`}
+              />
+            </button>
+            <button
+              onClick={goNext}
+              className="group"
+              aria-label="Next experience"
+              disabled={activeIndex === EXPERIENCES.length - 1}
+            >
+              <LongArrowRight
+                className={`h-2.5 w-10 transition-all duration-300 md:h-3 md:w-12 ${
+                  activeIndex === EXPERIENCES.length - 1
+                    ? "text-[var(--text-subtle)] opacity-30"
+                    : "text-[var(--text-subtle)] group-hover:translate-x-1 group-hover:text-[var(--text)]"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
         <div className="relative">
           <div
             className="absolute left-0 right-0 top-1 h-px bg-[var(--text-subtle)]"
@@ -332,12 +365,6 @@ const ExperienceSection = () => {
         <div className="mt-8 flex justify-between">
           <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--text-subtle)]">
             10+ years in web development
-          </span>
-          <span
-            className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--text-subtle)]"
-            aria-hidden="true"
-          >
-            {canScrollHorizontally ? "← Scroll →" : ""}
           </span>
         </div>
       </nav>
