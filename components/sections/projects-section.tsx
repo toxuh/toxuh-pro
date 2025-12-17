@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
 
 import { LongArrowLeft, LongArrowRight } from "@/components/ui/long-arrows";
@@ -13,6 +14,7 @@ interface Project {
   description: string;
   type: string;
   stack: string[];
+  image?: string;
   link?: string;
   github?: string;
   color: string;
@@ -21,91 +23,43 @@ interface Project {
 const PROJECTS: Project[] = [
   {
     id: "01",
-    name: "Finflow",
+    name: "CoinsFlow",
     description:
       "Financial analytics dashboard with real-time data visualization and portfolio tracking",
-    type: "Dashboard",
-    stack: ["Next.js", "TypeScript", "Tailwind", "Recharts"],
-    link: "https://finflow.demo",
-    github: "https://github.com/example/finflow",
+    type: "Web App",
+    image: "cf.webp",
+    stack: ["Next.js", "TypeScript", "Tailwind", "Recharts", "PostgreSQL"],
+    link: "https://coinsflow.xaru.io",
     color: "#3B82F6",
   },
   {
     id: "02",
-    name: "Nomad",
+    name: "CardMind",
     description:
-      "Platform connecting digital nomads with co-working spaces and communities worldwide",
-    type: "Platform",
-    stack: ["React", "Node.js", "PostgreSQL", "MapboxGL"],
-    link: "https://nomad.demo",
-    github: "https://github.com/example/nomad",
-    color: "#10B981",
+      "AI-powered agile boards for teams to plan, track, and manage their work",
+    type: "Web App",
+    image: "cm.webp",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind",
+      "Recharts",
+      "PostgreSQL",
+      "RAG",
+    ],
+    github: "https://github.com/toxuh/desk",
+    color: "#3B82F6",
   },
   {
     id: "03",
-    name: "Artisan",
+    name: "Antipode",
     description:
-      "E-commerce marketplace for handcrafted goods with custom storefront builder",
-    type: "E-commerce",
-    stack: ["Next.js", "Prisma", "Stripe", "Cloudinary"],
-    link: "https://artisan.demo",
-    github: "https://github.com/example/artisan",
-    color: "#F59E0B",
-  },
-  {
-    id: "04",
-    name: "Pulse",
-    description:
-      "Real-time application monitoring with customizable alerts and performance metrics",
-    type: "Monitoring",
-    stack: ["React", "WebSockets", "D3.js", "Redis"],
-    link: "https://pulse.demo",
-    github: "https://github.com/example/pulse",
-    color: "#EF4444",
-  },
-  {
-    id: "05",
-    name: "Chronicle",
-    description:
-      "Modern blog platform with AI-powered content suggestions and MDX support",
-    type: "CMS",
-    stack: ["Next.js", "OpenAI", "MDX", "Vercel"],
-    link: "https://chronicle.demo",
-    github: "https://github.com/example/chronicle",
-    color: "#8B5CF6",
-  },
-  {
-    id: "06",
-    name: "Velocity",
-    description:
-      "Performance testing suite for web applications with detailed metrics and reports",
-    type: "DevTools",
-    stack: ["TypeScript", "Playwright", "Node.js", "Charts"],
-    link: "https://velocity.demo",
-    github: "https://github.com/example/velocity",
-    color: "#06B6D4",
-  },
-  {
-    id: "07",
-    name: "Habitat",
-    description:
-      "Smart home dashboard integrating IoT devices with voice control and automation",
-    type: "IoT",
-    stack: ["React", "MQTT", "Node.js", "WebSockets"],
-    link: "https://habitat.demo",
-    github: "https://github.com/example/habitat",
-    color: "#84CC16",
-  },
-  {
-    id: "08",
-    name: "Meridian",
-    description:
-      "Travel planning app with AI-powered itinerary suggestions and booking integration",
-    type: "Travel",
-    stack: ["Next.js", "OpenAI", "Prisma", "Stripe"],
-    link: "https://meridian.demo",
-    github: "https://github.com/example/meridian",
-    color: "#EC4899",
+      "Fun app to get a point on Earth very opposite to your current location",
+    type: "Web App",
+    image: "ap.webp",
+    stack: ["Next.js", "TypeScript", "Tailwind", "Leaflet"],
+    github: "https://github.com/toxuh/opposite",
+    color: "#3B82F6",
   },
 ];
 
@@ -172,25 +126,37 @@ const ProjectsSection = () => {
             transition: "opacity 0.8s ease, transform 0.8s ease",
           }}
         >
-          <div className="pointer-events-auto absolute -top-[10px] right-0 z-10 flex items-center gap-4">
-            <button
-              onClick={goPrev}
-              className="group"
-              aria-label="Previous project"
-            >
-              <LongArrowLeft className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:-translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
-            </button>
-            <button
-              onClick={goNext}
-              className="group"
-              aria-label="Next project"
-            >
-              <LongArrowRight className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
-            </button>
-          </div>
+          {PROJECTS.length > 1 && (
+            <div className="pointer-events-auto absolute -top-[10px] right-0 z-10 flex items-center gap-4">
+              <button
+                onClick={goPrev}
+                className="group"
+                aria-label="Previous project"
+              >
+                <LongArrowLeft className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:-translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
+              </button>
+              <button
+                onClick={goNext}
+                className="group"
+                aria-label="Next project"
+              >
+                <LongArrowRight className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
+              </button>
+            </div>
+          )}
 
           <div className="w-full lg:w-[66%] xl:w-[68%]">
-            <ProjectScreenshot project={activeProject} />
+            {activeProject.image ? (
+              <Image
+                src={`/projects/${activeProject.image}`}
+                alt={activeProject.name}
+                className="w-full rounded-2xl"
+                width={925}
+                height={544}
+              />
+            ) : (
+              <ProjectScreenshot project={activeProject} />
+            )}
           </div>
 
           <div className="flex flex-col items-center text-center lg:w-[34%] xl:w-[32%] lg:items-start lg:text-left">
@@ -255,29 +221,31 @@ const ProjectsSection = () => {
         </div>
       </div>
 
-      <nav className="flex items-center justify-between">
-        <div className="md:hidden" />
+      {PROJECTS.length > 1 && (
+        <nav className="flex items-center justify-between">
+          <div className="md:hidden" />
 
-        <div className="flex items-center gap-2">
-          {PROJECTS.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goTo(index)}
-              className={`h-px transition-all duration-300 ${
-                activeIndex === index
-                  ? "w-8 bg-[var(--text)]"
-                  : "w-4 bg-[var(--text-subtle)] hover:bg-[var(--text-muted)]"
-              }`}
-              aria-label={`Go to project ${index + 1}`}
-            />
-          ))}
-        </div>
+          <div className="flex items-center gap-2">
+            {PROJECTS.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goTo(index)}
+                className={`h-px transition-all duration-300 ${
+                  activeIndex === index
+                    ? "w-8 bg-[var(--text)]"
+                    : "w-4 bg-[var(--text-subtle)] hover:bg-[var(--text-muted)]"
+                }`}
+                aria-label={`Go to project ${index + 1}`}
+              />
+            ))}
+          </div>
 
-        <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--text-subtle)]">
-          {String(activeIndex + 1).padStart(2, "0")} /{" "}
-          {String(PROJECTS.length).padStart(2, "0")}
-        </span>
-      </nav>
+          <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--text-subtle)]">
+            {String(activeIndex + 1).padStart(2, "0")} /{" "}
+            {String(PROJECTS.length).padStart(2, "0")}
+          </span>
+        </nav>
+      )}
     </section>
   );
 };
