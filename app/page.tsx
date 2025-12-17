@@ -1,6 +1,7 @@
+import ContactsSection from "@/components/sections/contacts-section";
 import ExperienceSection from "@/components/sections/experience-section";
 import HeroSection from "@/components/sections/hero-section";
-import ProjectsSection from "@/components/sections/projects-section";
+// import ProjectsSection from "@/components/sections/projects-section";
 import SkillsSection from "@/components/sections/skills-section";
 
 const Home = () => (
@@ -8,7 +9,8 @@ const Home = () => (
     <HeroSection />
     <SkillsSection />
     <ExperienceSection />
-    <ProjectsSection />
+    {/*<ProjectsSection />*/}
+    <ContactsSection />
   </main>
 );
 
