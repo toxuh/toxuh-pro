@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useInView } from "@/hooks/use-in-view";
 
@@ -168,6 +168,42 @@ const ExperienceSection = () => {
 
     setCanScrollHorizontally(clampedIndex < EXPERIENCES.length - 1);
   };
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const isFinePointer =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(pointer: fine)").matches &&
+      window.matchMedia?.("(hover: hover)").matches;
+
+    if (!isFinePointer) return;
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.shiftKey) return;
+      if (Math.abs(e.deltaX) > 0) return;
+
+      const delta = e.deltaY;
+
+      if (Math.abs(delta) < 20) return;
+
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+      const atStart = scrollLeft <= 0;
+      const atEnd = scrollLeft + clientWidth >= scrollWidth - 1;
+
+      if ((delta < 0 && atStart) || (delta > 0 && atEnd)) return;
+
+      e.preventDefault();
+      container.scrollLeft += delta;
+    };
+
+    container.addEventListener("wheel", onWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener("wheel", onWheel);
+    };
+  }, []);
 
   return (
     <section

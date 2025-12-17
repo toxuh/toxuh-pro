@@ -1,35 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 
-// Кастомные стрелки с длинным хвостом
-const LongArrowLeft = ({ className = "" }: { className?: string }) => (
-  <svg
-    viewBox="0 0 48 12"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1"
-    className={className}
-  >
-    <line x1="48" y1="6" x2="4" y2="6" />
-    <polyline points="10,1 4,6 10,11" />
-  </svg>
-);
-
-const LongArrowRight = ({ className = "" }: { className?: string }) => (
-  <svg
-    viewBox="0 0 48 12"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1"
-    className={className}
-  >
-    <line x1="0" y1="6" x2="44" y2="6" />
-    <polyline points="38,1 44,6 38,11" />
-  </svg>
-);
-
+import { LongArrowLeft, LongArrowRight } from "@/components/ui/long-arrows";
+import { ProjectScreenshot } from "@/components/ui/project-screenshot";
 import { useInView } from "@/hooks/use-in-view";
 
 interface Project {
@@ -39,6 +14,7 @@ interface Project {
   type: string;
   stack: string[];
   link?: string;
+  github?: string;
   color: string;
 }
 
@@ -51,6 +27,7 @@ const PROJECTS: Project[] = [
     type: "Dashboard",
     stack: ["Next.js", "TypeScript", "Tailwind", "Recharts"],
     link: "https://finflow.demo",
+    github: "https://github.com/example/finflow",
     color: "#3B82F6",
   },
   {
@@ -61,6 +38,7 @@ const PROJECTS: Project[] = [
     type: "Platform",
     stack: ["React", "Node.js", "PostgreSQL", "MapboxGL"],
     link: "https://nomad.demo",
+    github: "https://github.com/example/nomad",
     color: "#10B981",
   },
   {
@@ -71,6 +49,7 @@ const PROJECTS: Project[] = [
     type: "E-commerce",
     stack: ["Next.js", "Prisma", "Stripe", "Cloudinary"],
     link: "https://artisan.demo",
+    github: "https://github.com/example/artisan",
     color: "#F59E0B",
   },
   {
@@ -81,6 +60,7 @@ const PROJECTS: Project[] = [
     type: "Monitoring",
     stack: ["React", "WebSockets", "D3.js", "Redis"],
     link: "https://pulse.demo",
+    github: "https://github.com/example/pulse",
     color: "#EF4444",
   },
   {
@@ -91,6 +71,7 @@ const PROJECTS: Project[] = [
     type: "CMS",
     stack: ["Next.js", "OpenAI", "MDX", "Vercel"],
     link: "https://chronicle.demo",
+    github: "https://github.com/example/chronicle",
     color: "#8B5CF6",
   },
   {
@@ -101,6 +82,7 @@ const PROJECTS: Project[] = [
     type: "DevTools",
     stack: ["TypeScript", "Playwright", "Node.js", "Charts"],
     link: "https://velocity.demo",
+    github: "https://github.com/example/velocity",
     color: "#06B6D4",
   },
   {
@@ -111,6 +93,7 @@ const PROJECTS: Project[] = [
     type: "IoT",
     stack: ["React", "MQTT", "Node.js", "WebSockets"],
     link: "https://habitat.demo",
+    github: "https://github.com/example/habitat",
     color: "#84CC16",
   },
   {
@@ -121,52 +104,11 @@ const PROJECTS: Project[] = [
     type: "Travel",
     stack: ["Next.js", "OpenAI", "Prisma", "Stripe"],
     link: "https://meridian.demo",
+    github: "https://github.com/example/meridian",
     color: "#EC4899",
   },
 ];
 
-// Компонент-заглушка для скриншота проекта
-const ProjectScreenshot = ({ project }: { project: Project }) => (
-  <div className="relative overflow-hidden border border-[var(--grid-color)] bg-[var(--bg)]">
-    {/* Имитация браузерного окна */}
-    <div className="flex items-center gap-1.5 border-b border-[var(--grid-color)] px-3 py-2">
-      <div className="h-1.5 w-1.5 rounded-full bg-[var(--text-subtle)] opacity-40" />
-      <div className="h-1.5 w-1.5 rounded-full bg-[var(--text-subtle)] opacity-40" />
-      <div className="h-1.5 w-1.5 rounded-full bg-[var(--text-subtle)] opacity-40" />
-      <div className="ml-2 flex-1">
-        <div className="mx-auto h-1 w-20 rounded-full bg-[var(--grid-color)]" />
-      </div>
-    </div>
-    {/* Контент скриншота */}
-    <div className="relative aspect-[16/9] w-full">
-      <div
-        className="absolute inset-0 opacity-[0.06]"
-        style={{
-          background: `linear-gradient(135deg, ${project.color} 0%, transparent 70%)`,
-        }}
-      />
-      <div className="absolute inset-0 p-6">
-        <div className="mb-4 h-2 w-1/4 rounded bg-[var(--grid-color)]" />
-        <div className="mb-2 h-1.5 w-1/2 rounded bg-[var(--grid-color)]" />
-        <div className="mb-6 h-1.5 w-1/3 rounded bg-[var(--grid-color)]" />
-        <div className="grid grid-cols-4 gap-3">
-          <div className="aspect-[4/3] rounded bg-[var(--grid-color)]" />
-          <div className="aspect-[4/3] rounded bg-[var(--grid-color)]" />
-          <div className="aspect-[4/3] rounded bg-[var(--grid-color)]" />
-          <div className="aspect-[4/3] rounded bg-[var(--grid-color)]" />
-        </div>
-      </div>
-      <span
-        className="absolute bottom-3 right-4 font-[family-name:var(--font-serif)] text-[clamp(3rem,8vw,6rem)] leading-none tracking-[-0.04em] text-[var(--text-subtle)] opacity-20"
-        style={{ fontStyle: "italic" }}
-      >
-        {project.id}
-      </span>
-    </div>
-  </div>
-);
-
-// Вариант 3: Стильная карусель
 const ProjectsSection = () => {
   const { ref: sectionRef, isInView: isVisible } = useInView<HTMLElement>({
     threshold: 0.2,
@@ -210,7 +152,7 @@ const ProjectsSection = () => {
           className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.3em] text-[var(--text-subtle)]"
           aria-hidden="true"
         >
-          05
+          04
         </span>
         <h2
           id="projects-carousel-heading"
@@ -222,31 +164,36 @@ const ProjectsSection = () => {
       </div>
 
       <div className="relative flex flex-1 items-center justify-center gap-8 py-6 lg:gap-16">
-        {/* Left Arrow */}
-        <button
-          onClick={goPrev}
-          className="group hidden flex-shrink-0 items-center justify-center md:flex"
-          aria-label="Previous project"
-        >
-          <LongArrowLeft className="h-3 w-12 text-[var(--text-subtle)] transition-all duration-300 group-hover:-translate-x-2 group-hover:text-[var(--text)]" />
-        </button>
-
-        {/* Content */}
         <div
-          className="flex max-w-4xl flex-1 flex-col items-center gap-6 lg:flex-row lg:gap-12"
+          className="relative flex max-w-7xl xl:max-w-[88rem] flex-1 flex-col items-center gap-6 lg:flex-row lg:gap-12"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? "translateY(0)" : "translateY(30px)",
             transition: "opacity 0.8s ease, transform 0.8s ease",
           }}
         >
-          {/* Screenshot */}
-          <div className="w-full lg:w-1/2">
+          <div className="pointer-events-auto absolute -top-[10px] right-0 z-10 flex items-center gap-4">
+            <button
+              onClick={goPrev}
+              className="group"
+              aria-label="Previous project"
+            >
+              <LongArrowLeft className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:-translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
+            </button>
+            <button
+              onClick={goNext}
+              className="group"
+              aria-label="Next project"
+            >
+              <LongArrowRight className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
+            </button>
+          </div>
+
+          <div className="w-full lg:w-[66%] xl:w-[68%]">
             <ProjectScreenshot project={activeProject} />
           </div>
 
-          {/* Info */}
-          <div className="flex flex-col items-center text-center lg:w-1/2 lg:items-start lg:text-left">
+          <div className="flex flex-col items-center text-center lg:w-[34%] xl:w-[32%] lg:items-start lg:text-left">
             <div className="mb-2 flex items-baseline gap-3">
               <span
                 className="font-[family-name:var(--font-serif)] text-[clamp(2rem,5vw,4rem)] leading-none tracking-[-0.04em] text-[var(--text-subtle)]"
@@ -278,47 +225,39 @@ const ProjectsSection = () => {
               ))}
             </ul>
 
-            {activeProject.link && (
-              <a
-                href={activeProject.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 border border-[var(--grid-color)] px-4 py-2 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)] transition-all duration-300 hover:border-[var(--text-subtle)] hover:text-[var(--text)] md:text-xs"
-              >
-                <span>View Project</span>
-                <ExternalLink className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
-              </a>
+            {(activeProject.link || activeProject.github) && (
+              <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+                {activeProject.link && (
+                  <a
+                    href={activeProject.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-3 border border-[var(--grid-color)] px-4 py-2 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)] transition-all duration-300 hover:border-[var(--text-subtle)] hover:text-[var(--text)] md:text-xs"
+                  >
+                    <span>View Project</span>
+                    <ExternalLink className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
+                  </a>
+                )}
+                {activeProject.github && (
+                  <a
+                    href={activeProject.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group inline-flex items-center gap-3 border border-[var(--grid-color)] px-4 py-2 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)] transition-all duration-300 hover:border-[var(--text-subtle)] hover:text-[var(--text)] md:text-xs"
+                  >
+                    <span>GitHub</span>
+                    <Github className="h-3 w-3 transition-transform duration-300 group-hover:translate-y-[-1px]" />
+                  </a>
+                )}
+              </div>
             )}
           </div>
         </div>
-
-        {/* Right Arrow */}
-        <button
-          onClick={goNext}
-          className="group hidden flex-shrink-0 items-center justify-center md:flex"
-          aria-label="Next project"
-        >
-          <LongArrowRight className="h-3 w-12 text-[var(--text-subtle)] transition-all duration-300 group-hover:translate-x-2 group-hover:text-[var(--text)]" />
-        </button>
       </div>
 
-      {/* Navigation */}
       <nav className="flex items-center justify-between">
-        {/* Mobile arrows */}
-        <div className="flex items-center gap-6 md:hidden">
-          <button
-            onClick={goPrev}
-            className="group"
-            aria-label="Previous project"
-          >
-            <LongArrowLeft className="h-2 w-8 text-[var(--text-subtle)] transition-all duration-300 group-hover:text-[var(--text)]" />
-          </button>
-          <button onClick={goNext} className="group" aria-label="Next project">
-            <LongArrowRight className="h-2 w-8 text-[var(--text-subtle)] transition-all duration-300 group-hover:text-[var(--text)]" />
-          </button>
-        </div>
+        <div className="md:hidden" />
 
-        {/* Dots */}
         <div className="flex items-center gap-2">
           {PROJECTS.map((_, index) => (
             <button
