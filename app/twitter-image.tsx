@@ -3,7 +3,7 @@ import { loadGoogleFont } from "@/lib/loadGoogleFont";
 
 export const runtime = "edge";
 
-export const alt = "Anton Zakharov — Frontend Engineer";
+export const alt = "Anton Zakharov — Fullstack Engineer";
 export const size = {
   width: 1200,
   height: 630,
@@ -80,7 +80,7 @@ const TwitterImage = async () =>
             fontFamily: "Space Mono",
           }}
         >
-          Frontend Engineer
+          Fullstack Engineer
         </p>
       </div>
       <p

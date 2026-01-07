@@ -31,7 +31,7 @@ const HeroSection = () => (
       />
 
       <p className="animate-fade-up animation-delay-200 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.35em] text-[var(--text-muted)] opacity-0 md:text-xs md:tracking-[0.4em]">
-        Frontend Engineer
+        Fullstack Engineer
       </p>
 
       <a
