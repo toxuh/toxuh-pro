@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 import { type Metadata } from "next";
 import Script from "next/script";
-import { Instrument_Serif, Space_Mono } from "next/font/google";
+import localFont from "next/font/local";
 
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -34,17 +34,20 @@ const jsonLd = {
   ],
 };
 
-const instrumentSerif = Instrument_Serif({
+const instrumentSerif = localFont({
   variable: "--font-serif",
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
+  src: [
+    { path: "./fonts/InstrumentSerif-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/InstrumentSerif-Italic.woff2", weight: "400", style: "italic" },
+  ],
 });
 
-const spaceMono = Space_Mono({
+const spaceMono = localFont({
   variable: "--font-mono",
-  subsets: ["latin"],
-  weight: ["400", "700"],
+  src: [
+    { path: "./fonts/SpaceMono-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/SpaceMono-Bold.woff2", weight: "700", style: "normal" },
+  ],
 });
 
 export const metadata: Metadata = {

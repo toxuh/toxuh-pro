@@ -1,5 +1,4 @@
 import { ImageResponse } from "next/og";
-import { loadGoogleFont } from "@/lib/loadGoogleFont";
 
 export const runtime = "edge";
 
@@ -10,8 +9,21 @@ export const size = {
 };
 export const contentType = "image/png";
 
-const OGImage = async () =>
-  new ImageResponse(
+const OGImage = async () => {
+  const [instrumentSerifRegular, instrumentSerifItalic, spaceMonoRegular] =
+    await Promise.all([
+      fetch(new URL("./fonts/InstrumentSerif-Regular.woff2", import.meta.url)).then(
+        (res) => res.arrayBuffer(),
+      ),
+      fetch(new URL("./fonts/InstrumentSerif-Italic.woff2", import.meta.url)).then(
+        (res) => res.arrayBuffer(),
+      ),
+      fetch(new URL("./fonts/SpaceMono-Regular.woff2", import.meta.url)).then(
+        (res) => res.arrayBuffer(),
+      ),
+    ]);
+
+  return new ImageResponse(
     <div
       style={{
         height: "100%",
@@ -101,24 +113,25 @@ const OGImage = async () =>
       fonts: [
         {
           name: "Instrument Serif",
-          data: await loadGoogleFont({ family: "Instrument Serif", weight: "400", ital: 0 }),
+          data: instrumentSerifRegular,
           weight: 400,
           style: "normal",
         },
         {
           name: "Instrument Serif",
-          data: await loadGoogleFont({ family: "Instrument Serif", weight: "400", ital: 1 }),
+          data: instrumentSerifItalic,
           weight: 400,
           style: "italic",
         },
         {
           name: "Space Mono",
-          data: await loadGoogleFont({ family: "Space Mono", weight: "400" }),
+          data: spaceMonoRegular,
           weight: 400,
           style: "normal",
         },
       ],
     },
   );
+};
 
 export default OGImage;
