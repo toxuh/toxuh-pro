@@ -5,7 +5,6 @@ WORKDIR /app
 ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1
 
-RUN apk add --no-cache libc6-compat
 RUN corepack enable
 
 COPY package.json package-lock.json ./
