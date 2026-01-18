@@ -18,7 +18,7 @@ ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
 
 RUN npm run build
 
-RUN addgroup -S app && adduser -S -G app app
+RUN groupadd -r app && useradd -r -g app app
 USER app
 
 EXPOSE 3000
