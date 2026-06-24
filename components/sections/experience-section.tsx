@@ -1,9 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
-
 import { LongArrowLeft, LongArrowRight } from "@/components/ui/long-arrows";
 import { useInView } from "@/hooks/use-in-view";
+import { useSnapCarousel } from "@/hooks/use-snap-carousel";
 
 interface Experience {
   company: string;
@@ -87,93 +86,19 @@ const EXPERIENCES: Experience[] = [
   },
 ];
 
-const clampExperienceIndex = (index: number) =>
-  Math.max(0, Math.min(index, EXPERIENCES.length - 1));
-
-const getScrollPaddingLeft = (container: HTMLElement) => {
-  const styles = getComputedStyle(container);
-  return parseFloat(styles.scrollPaddingLeft || "0") || 0;
-};
-
-const getCardScrollLeft = (container: HTMLElement, card: HTMLElement) =>
-  card.offsetLeft - getScrollPaddingLeft(container);
-
-const isCurrentCardPosition = (
-  index: number,
-  currentIndex: number,
-  currentScrollLeft: number,
-  targetScrollLeft: number,
-) => index === currentIndex && currentScrollLeft === targetScrollLeft;
-
 const ExperienceSection = () => {
   const { ref: sectionRef, isInView: isVisible } = useInView<HTMLElement>({
     threshold: 0.3,
   });
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const currentIndexRef = useRef(0);
-  const cardsRef = useRef<(HTMLElement | null)[]>([]);
-
-  const handleScroll = () => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const containerRect = container.getBoundingClientRect();
-    const containerCenter = containerRect.left + containerRect.width / 2;
-
-    let closestIndex = 0;
-    let minDistance = Infinity;
-
-    cardsRef.current.forEach((card, index) => {
-      if (!card) return;
-
-      const rect = card.getBoundingClientRect();
-      const cardCenter = rect.left + rect.width / 2;
-      const distance = Math.abs(cardCenter - containerCenter);
-
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIndex = index;
-      }
-    });
-
-    if (closestIndex === currentIndexRef.current) return;
-
-    currentIndexRef.current = closestIndex;
-    setActiveIndex(closestIndex);
-  };
-
-  const scrollToCard = (index: number) => {
-    const clampedIndex = clampExperienceIndex(index);
-    const container = scrollContainerRef.current;
-    const card = cardsRef.current[clampedIndex];
-
-    if (!container || !card) return;
-
-    const targetLeft = getCardScrollLeft(container, card);
-
-    if (
-      isCurrentCardPosition(
-        clampedIndex,
-        currentIndexRef.current,
-        container.scrollLeft,
-        targetLeft,
-      )
-    )
-      return;
-
-    currentIndexRef.current = clampedIndex;
-    setActiveIndex(clampedIndex);
-
-    container.scrollTo({
-      left: targetLeft,
-      behavior: "smooth",
-    });
-  };
-
-  const goPrev = () => scrollToCard(activeIndex - 1);
-  const goNext = () => scrollToCard(activeIndex + 1);
+  const {
+    scrollContainerRef,
+    activeIndex,
+    handleScroll,
+    scrollToCard,
+    goPrev,
+    goNext,
+    setCardRef,
+  } = useSnapCarousel(EXPERIENCES.length);
 
   return (
     <section
@@ -208,9 +133,7 @@ const ExperienceSection = () => {
         {EXPERIENCES.map((exp, index) => (
           <article
             key={exp.company}
-            ref={(el) => {
-              cardsRef.current[index] = el;
-            }}
+            ref={setCardRef(index)}
             className="flex w-[85vw] flex-shrink-0 flex-col justify-center snap-start md:w-[80vw] lg:w-[75vw]"
             style={{
               opacity: isVisible ? 1 : 0,

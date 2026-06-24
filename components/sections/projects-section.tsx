@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import Image from "next/image";
 import { ExternalLink, Github } from "lucide-react";
 
 import { LongArrowLeft, LongArrowRight } from "@/components/ui/long-arrows";
 import { ProjectScreenshot } from "@/components/ui/project-screenshot";
 import { useInView } from "@/hooks/use-in-view";
+import { useSnapCarousel } from "@/hooks/use-snap-carousel";
 
 interface Project {
   id: string;
@@ -70,26 +71,6 @@ const PROJECTS: Project[] = [
     color: "#3B82F6",
   },
 ];
-
-const normalizeProjectIndex = (index: number) =>
-  (index + PROJECTS.length) % PROJECTS.length;
-
-const ProjectControls = ({
-  onPrev,
-  onNext,
-}: {
-  onPrev: () => void;
-  onNext: () => void;
-}) => (
-  <div className="pointer-events-auto absolute -top-[10px] right-0 z-10 flex items-center gap-4">
-    <button onClick={onPrev} className="group" aria-label="Previous project">
-      <LongArrowLeft className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:-translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
-    </button>
-    <button onClick={onNext} className="group" aria-label="Next project">
-      <LongArrowRight className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
-    </button>
-  </div>
-);
 
 const ProjectMedia = ({ project }: { project: Project }) => (
   <div className="w-full lg:w-[56%] xl:w-[56%]">
@@ -194,9 +175,7 @@ const ProjectPagination = ({
   activeIndex: number;
   onSelect: (index: number) => void;
 }) => (
-  <nav className="flex items-center justify-between">
-    <div className="md:hidden" />
-
+  <div className="flex items-center justify-between">
     <div className="flex items-center gap-2">
       {PROJECTS.map((_, index) => (
         <button
@@ -216,7 +195,7 @@ const ProjectPagination = ({
       {String(activeIndex + 1).padStart(2, "0")} /{" "}
       {String(PROJECTS.length).padStart(2, "0")}
     </span>
-  </nav>
+  </div>
 );
 
 const projectKeyOffsets: Record<string, number> = {
@@ -228,42 +207,34 @@ const ProjectsSection = () => {
   const { ref: sectionRef, isInView: isVisible } = useInView<HTMLElement>({
     threshold: 0.2,
   });
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  const goTo = useCallback(
-    (index: number) => {
-      if (isAnimating) return;
-      setIsAnimating(true);
-      setActiveIndex(normalizeProjectIndex(index));
-      setTimeout(() => setIsAnimating(false), 500);
-    },
-    [isAnimating],
-  );
-
-  const goNext = () => goTo(activeIndex + 1);
-  const goPrev = () => goTo(activeIndex - 1);
+  const {
+    scrollContainerRef,
+    activeIndex,
+    handleScroll,
+    scrollToCard,
+    goPrev,
+    goNext,
+    setCardRef,
+  } = useSnapCarousel(PROJECTS.length);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const offset = projectKeyOffsets[e.key];
       if (offset === undefined) return;
 
-      goTo(activeIndex + offset);
+      scrollToCard(activeIndex + offset);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeIndex, goTo]);
-
-  const activeProject = PROJECTS[activeIndex];
+  }, [activeIndex, scrollToCard]);
 
   return (
     <section
       ref={sectionRef}
-      className="relative flex h-svh snap-start flex-col overflow-hidden px-8 py-12 md:px-16 md:py-16 lg:px-24"
+      className="relative flex h-svh snap-start flex-col overflow-hidden"
       aria-labelledby="projects-carousel-heading"
     >
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between px-8 py-12 md:px-16 md:py-16 lg:px-24">
         <span
           className="font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.3em] text-[var(--text-subtle)]"
           aria-hidden="true"
@@ -279,23 +250,75 @@ const ProjectsSection = () => {
         </h2>
       </div>
 
-      <div className="relative flex flex-1 items-center justify-center gap-8 py-6 lg:gap-16">
+      <div
+        ref={scrollContainerRef}
+        className="scrollbar-hide flex flex-1 gap-8 overflow-x-auto snap-x snap-mandatory px-8 scroll-pl-8 md:px-16 md:scroll-pl-16 lg:px-24 lg:scroll-pl-24"
+        onScroll={handleScroll}
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        role="list"
+        aria-label="Projects carousel"
+      >
+        {PROJECTS.map((project, index) => (
+          <article
+            key={project.id}
+            ref={setCardRef(index)}
+            className="flex w-[85vw] flex-shrink-0 flex-col items-center justify-center gap-6 snap-start md:w-[80vw] lg:w-[80vw] lg:flex-row lg:gap-12"
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? "translateY(0)" : "translateY(20px)",
+              transition: `opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * 100}ms, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * 100}ms`,
+            }}
+            aria-label={`${project.name} — ${project.type}`}
+          >
+            <ProjectMedia project={project} />
+            <ProjectDetails project={project} />
+          </article>
+        ))}
         <div
-          className="relative flex max-w-6xl flex-1 flex-col items-center gap-6 lg:flex-row lg:gap-12 xl:max-w-[78rem]"
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? "translateY(0)" : "translateY(30px)",
-            transition: "opacity 0.8s ease, transform 0.8s ease",
-          }}
-        >
-          <ProjectControls onPrev={goPrev} onNext={goNext} />
-
-          <ProjectMedia project={activeProject} />
-          <ProjectDetails project={activeProject} />
-        </div>
+          className="w-[15vw] flex-shrink-0 md:w-[20vw] lg:w-[20vw]"
+          aria-hidden="true"
+        />
       </div>
 
-      <ProjectPagination activeIndex={activeIndex} onSelect={goTo} />
+      <nav
+        className="px-8 pb-12 pt-8 md:px-16 md:pb-16 lg:px-24"
+        aria-label="Projects navigation"
+      >
+        <div className="mb-4 flex justify-end">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={goPrev}
+              className="group"
+              aria-label="Previous project"
+              disabled={activeIndex === 0}
+            >
+              <LongArrowLeft
+                className={`h-2.5 w-10 transition-all duration-300 md:h-3 md:w-12 ${
+                  activeIndex === 0
+                    ? "text-[var(--text-subtle)] opacity-30"
+                    : "text-[var(--text-subtle)] group-hover:-translate-x-1 group-hover:text-[var(--text)]"
+                }`}
+              />
+            </button>
+            <button
+              onClick={goNext}
+              className="group"
+              aria-label="Next project"
+              disabled={activeIndex === PROJECTS.length - 1}
+            >
+              <LongArrowRight
+                className={`h-2.5 w-10 transition-all duration-300 md:h-3 md:w-12 ${
+                  activeIndex === PROJECTS.length - 1
+                    ? "text-[var(--text-subtle)] opacity-30"
+                    : "text-[var(--text-subtle)] group-hover:translate-x-1 group-hover:text-[var(--text)]"
+                }`}
+              />
+            </button>
+          </div>
+        </div>
+
+        <ProjectPagination activeIndex={activeIndex} onSelect={scrollToCard} />
+      </nav>
     </section>
   );
 };
