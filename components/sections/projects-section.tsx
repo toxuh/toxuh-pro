@@ -27,42 +27,46 @@ interface ProjectAction {
 const PROJECTS: Project[] = [
   {
     id: "01",
-    name: "CoinsFlow",
+    name: "VOZ",
     description:
-      "Financial analytics dashboard with real-time data visualization and portfolio tracking",
-    type: "Web App",
-    image: "cf.webp",
-    stack: ["Next.js", "TypeScript", "Tailwind", "Recharts", "PostgreSQL"],
-    actions: [{ type: "project", href: "https://coinsflow.xaru.io" }],
+      "GEO/AEO analytics SaaS that tracks brand visibility across ChatGPT, Claude, Perplexity, and Gemini — mentions, sentiment, and share of voice",
+    type: "AI Analytics SaaS",
+    image: "voz.webp",
+    stack: ["Next.js 16", "FastAPI", "PostgreSQL", "ARQ / Redis", "Stripe", "LLMs"],
+    actions: [{ type: "project", href: "https://voz.ad" }],
     color: "#3B82F6",
   },
   {
     id: "02",
-    name: "CardMind",
+    name: "DGT Practice",
     description:
-      "AI-powered agile boards for teams to plan, track, and manage their work",
-    type: "Web App",
-    image: "cm.webp",
-    stack: [
-      "Next.js",
-      "TypeScript",
-      "Tailwind",
-      "Recharts",
-      "PostgreSQL",
-      "RAG",
-    ],
-    actions: [{ type: "github", href: "https://github.com/toxuh/desk" }],
+      "AI-powered prep for the Spanish DGT driving theory exam — spaced repetition, adaptive practice, and readiness scoring",
+    type: "Telegram Mini App",
+    image: "dgt.webp",
+    stack: ["Next.js", "PostgreSQL", "Prisma", "Telegram API", "OpenAI"],
+    actions: [{ type: "project", href: "https://t.me/spain_dgt_bot" }],
     color: "#3B82F6",
   },
   {
     id: "03",
-    name: "Antipode",
+    name: "WriteAs",
     description:
-      "Fun app to get a point on Earth very opposite to your current location",
+      "AI writing SaaS that learns your style from uploaded samples and generates on-brand content across formats",
+    type: "AI Writing SaaS",
+    image: "writeas.webp",
+    stack: ["Next.js", "FastAPI", "Qdrant", "OpenAI", "Stripe"],
+    actions: [{ type: "project", href: "https://writeas.pro" }],
+    color: "#3B82F6",
+  },
+  {
+    id: "04",
+    name: "DFM",
+    description:
+      "Music tool for live streamers — real-time on-air display, shareable playlists, and streaming/donation integrations",
     type: "Web App",
-    image: "ap.webp",
-    stack: ["Next.js", "TypeScript", "Tailwind", "Leaflet"],
-    actions: [{ type: "github", href: "https://github.com/toxuh/opposite" }],
+    image: "dfm.webp",
+    stack: ["Next.js", "PostgreSQL", "Prisma", "Node.js", "YouTube API"],
+    actions: [{ type: "project", href: "https://driler.fm" }],
     color: "#3B82F6",
   },
 ];
@@ -88,14 +92,15 @@ const ProjectControls = ({
 );
 
 const ProjectMedia = ({ project }: { project: Project }) => (
-  <div className="w-full lg:w-[66%] xl:w-[68%]">
+  <div className="w-full lg:w-[56%] xl:w-[56%]">
     {project.image ? (
       <Image
         src={`/projects/${project.image}`}
         alt={project.name}
         className="w-full rounded-2xl"
-        width={925}
-        height={544}
+        width={1920}
+        height={1080}
+        sizes="(min-width: 1024px) 700px, 100vw"
       />
     ) : (
       <ProjectScreenshot project={project} />
@@ -146,7 +151,7 @@ const ProjectActions = ({ actions }: { actions: ProjectAction[] }) => (
 );
 
 const ProjectDetails = ({ project }: { project: Project }) => (
-  <div className="flex flex-col items-center text-center lg:w-[34%] lg:items-start lg:text-left xl:w-[32%]">
+  <div className="flex flex-col items-center text-center lg:w-[40%] lg:items-start lg:text-left xl:w-[40%]">
     <div className="mb-2 flex items-baseline gap-3">
       <span
         className="font-[family-name:var(--font-serif)] text-[clamp(2rem,5vw,4rem)] leading-none tracking-[-0.04em] text-[var(--text-subtle)]"
@@ -276,7 +281,7 @@ const ProjectsSection = () => {
 
       <div className="relative flex flex-1 items-center justify-center gap-8 py-6 lg:gap-16">
         <div
-          className="relative flex max-w-7xl flex-1 flex-col items-center gap-6 lg:flex-row lg:gap-12 xl:max-w-[88rem]"
+          className="relative flex max-w-6xl flex-1 flex-col items-center gap-6 lg:flex-row lg:gap-12 xl:max-w-[78rem]"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? "translateY(0)" : "translateY(30px)",

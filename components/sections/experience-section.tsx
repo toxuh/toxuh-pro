@@ -21,83 +21,69 @@ const EXPERIENCES: Experience[] = [
   {
     company: "Xaru.io",
     type: "Fintech Startup",
-    role: "Lead Frontend Developer",
+    role: "Lead Frontend Engineer",
     location: "remote",
-    period: "Jun 2021 — Oct 2025",
+    period: "Jun 2021 — 2026",
     startYear: 2021,
-    endYear: 2025,
+    endYear: 2026,
     highlights: [
-      "Built a fullstack app from scratch with Next.js, Tailwind, and Prisma",
-      "Led frontend architecture and complete redesign for two products",
-      "Managed a small team and established dev processes",
+      "Led frontend architecture for 3 fintech products from scratch",
+      "Scaled a B2B platform to 150–200 companies and ~10k monthly transactions",
+      "Built a fullstack crypto portfolio tracker solo; cut load time ~2x",
     ],
     stack: [
       "Next.js",
       "React",
       "TypeScript",
-      "Tailwind",
-      "Prisma",
+      "Node.js",
       "PostgreSQL",
+      "WebSockets",
     ],
   },
   {
     company: "Etc. Professional Translators",
-    type: "B2B Platform",
+    type: "Acquired by Sberbank",
     role: "Frontend Developer",
     location: "remote",
     period: "Jan 2019 — Jun 2021",
     startYear: 2019,
     endYear: 2021,
     highlights: [
-      "Developed a secure B2B translation platform from ground up",
-      "Worked in a lean frontend pair with close backend collaboration",
-      "Introduced Scrum practices across the development team",
+      "Built a secure B2B translation platform later acquired by Sberbank",
+      "Led migration of ~90% of the codebase from JavaScript to TypeScript",
+      "Shipped document, secure task-assignment, and review workflows",
     ],
-    stack: ["React", "Redux", "Redux-Saga", "CRA"],
+    stack: ["React", "TypeScript", "CRA"],
   },
   {
     company: "Stafory",
-    type: "HR Tech",
+    type: "HR Tech · Vera Robot",
     role: "Frontend Developer",
     location: "remote",
-    period: "Jun 2017 — Nov 2018",
+    period: "Jan 2017 — Nov 2018",
     startYear: 2017,
     endYear: 2018,
     highlights: [
-      "Built internal HR automation tools with React and MobX",
-      "Developed a Chrome extension for workflow automation",
+      "Built the client-facing CRM for calling campaigns and candidate pipelines",
+      "Developed a Chrome extension for automated candidate data extraction",
+      "Introduced Scrum/Agile processes across the team",
     ],
-    stack: ["React", "MobX", "Chrome Extensions"],
+    stack: ["JavaScript", "React", "Chrome Extensions"],
   },
   {
     company: "Vsemayki.ru",
-    type: "E-commerce",
+    type: "E-commerce & Agency",
     role: "Frontend Developer",
     location: "on-site",
-    period: "Nov 2012 — Jun 2017",
-    startYear: 2012,
+    period: "2009 — 2017",
+    startYear: 2009,
     endYear: 2017,
     highlights: [
-      "Built product catalog and shopping cart interfaces",
-      "Developed custom print designer tool for merchandise",
-      "Optimized frontend performance for high-traffic pages",
+      "Frontend across e-commerce and agency work at Vsemayki, Sky-IT, and WOW",
+      "Built a custom print designer and a touchscreen kiosk product",
+      "Shipped storefronts, redesigns, and reusable UI components",
     ],
-    stack: ["JavaScript", "jQuery", "React", "CSS3"],
-  },
-  {
-    company: "Wow, Digital Agency",
-    type: "Creative Agency",
-    role: "Markup Developer",
-    location: "on-site",
-    period: "Jan 2010 — Oct 2012",
-    startYear: 2010,
-    endYear: 2012,
-    highlights: [
-      "Crafted pixel-perfect layouts for corporate websites and landing pages",
-      "Built responsive email templates with cross-client compatibility",
-      "Ensured cross-browser support across IE6+ and modern browsers",
-    ],
-    stack: ["HTML", "CSS", "JavaScript", "jQuery"],
+    stack: ["JavaScript", "HTML", "CSS", "jQuery", "Bootstrap"],
   },
 ];
 
@@ -384,7 +370,7 @@ const ExperienceSection = () => {
 
         <div className="mt-8 flex justify-between">
           <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--text-subtle)]">
-            10+ years in web development
+            15+ years in web development
           </span>
         </div>
       </nav>
