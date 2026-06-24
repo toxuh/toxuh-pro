@@ -57,6 +57,49 @@ const sizeClasses: Record<Skill["size"], string> = {
   sm: "text-[clamp(0.875rem,2vw,1.25rem)] leading-[1.1] tracking-[-0.01em]",
 };
 
+const getSkillStyle = (isVisible: boolean, index: number): CSSProperties => ({
+  opacity: isVisible ? 1 : 0,
+  transform: isVisible ? "translateY(0)" : "translateY(20px)",
+  transition: `opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * 40}ms, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * 40}ms`,
+});
+
+const getSkillNameClassName = (skill: Skill) =>
+  `${sizeClasses[skill.size]} ${
+    skill.italic
+      ? "font-[family-name:var(--font-serif)] text-[var(--text-muted)]"
+      : "font-[family-name:var(--font-mono)] text-[var(--text)]"
+  } transition-colors duration-300 group-hover:text-[var(--text)]`;
+
+const SkillItem = ({
+  skill,
+  index,
+  isVisible,
+}: {
+  skill: Skill;
+  index: number;
+  isVisible: boolean;
+}) => (
+  <span
+    className="group relative inline-flex cursor-default items-baseline"
+    style={getSkillStyle(isVisible, index)}
+  >
+    <span
+      className={getSkillNameClassName(skill)}
+      style={skill.italic ? { fontStyle: "italic" } : undefined}
+    >
+      {skill.name}
+    </span>
+    {skill.note && (
+      <span
+        className="ml-1 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.1em] text-[var(--text-subtle)] transition-colors duration-300 group-hover:text-[var(--text-muted)] md:ml-2 md:text-[11px]"
+        aria-label={skill.note}
+      >
+        {skill.note}
+      </span>
+    )}
+  </span>
+);
+
 const SkillsSection = () => {
   const { ref: sectionRef, isInView: isVisible } = useInView<HTMLElement>();
 
@@ -89,40 +132,14 @@ const SkillsSection = () => {
         aria-label="Technical and soft skills"
       >
         <li className="flex w-full flex-wrap items-baseline gap-x-[clamp(1rem,3vw,3rem)] gap-y-8">
-          {SKILLS.map((skill, index) => {
-            const style: CSSProperties = {
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? "translateY(0)" : "translateY(20px)",
-              transition: `opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * 40}ms, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${index * 40}ms`,
-            };
-
-            return (
-              <span
-                key={skill.name}
-                className="group relative inline-flex cursor-default items-baseline"
-                style={style}
-              >
-                <span
-                  className={`${sizeClasses[skill.size]} ${
-                    skill.italic
-                      ? "font-[family-name:var(--font-serif)] text-[var(--text-muted)]"
-                      : "font-[family-name:var(--font-mono)] text-[var(--text)]"
-                  } transition-colors duration-300 group-hover:text-[var(--text)]`}
-                  style={skill.italic ? { fontStyle: "italic" } : undefined}
-                >
-                  {skill.name}
-                </span>
-                {skill.note && (
-                  <span
-                    className="ml-1 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.1em] text-[var(--text-subtle)] transition-colors duration-300 group-hover:text-[var(--text-muted)] md:ml-2 md:text-[11px]"
-                    aria-label={skill.note}
-                  >
-                    {skill.note}
-                  </span>
-                )}
-              </span>
-            );
-          })}
+          {SKILLS.map((skill, index) => (
+            <SkillItem
+              key={skill.name}
+              skill={skill}
+              index={index}
+              isVisible={isVisible}
+            />
+          ))}
         </li>
       </ul>
 

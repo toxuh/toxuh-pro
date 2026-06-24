@@ -101,6 +101,24 @@ const EXPERIENCES: Experience[] = [
   },
 ];
 
+const clampExperienceIndex = (index: number) =>
+  Math.max(0, Math.min(index, EXPERIENCES.length - 1));
+
+const getScrollPaddingLeft = (container: HTMLElement) => {
+  const styles = getComputedStyle(container);
+  return parseFloat(styles.scrollPaddingLeft || "0") || 0;
+};
+
+const getCardScrollLeft = (container: HTMLElement, card: HTMLElement) =>
+  card.offsetLeft - getScrollPaddingLeft(container);
+
+const isCurrentCardPosition = (
+  index: number,
+  currentIndex: number,
+  currentScrollLeft: number,
+  targetScrollLeft: number,
+) => index === currentIndex && currentScrollLeft === targetScrollLeft;
+
 const ExperienceSection = () => {
   const { ref: sectionRef, isInView: isVisible } = useInView<HTMLElement>({
     threshold: 0.3,
@@ -141,19 +159,21 @@ const ExperienceSection = () => {
   };
 
   const scrollToCard = (index: number) => {
-    const clampedIndex = Math.max(0, Math.min(index, EXPERIENCES.length - 1));
-
+    const clampedIndex = clampExperienceIndex(index);
     const container = scrollContainerRef.current;
     const card = cardsRef.current[clampedIndex];
+
     if (!container || !card) return;
 
-    const styles = getComputedStyle(container);
-    const scrollPaddingLeft = parseFloat(styles.scrollPaddingLeft || "0") || 0;
-    const targetLeft = card.offsetLeft - scrollPaddingLeft;
+    const targetLeft = getCardScrollLeft(container, card);
 
     if (
-      clampedIndex === currentIndexRef.current &&
-      container.scrollLeft === targetLeft
+      isCurrentCardPosition(
+        clampedIndex,
+        currentIndexRef.current,
+        container.scrollLeft,
+        targetLeft,
+      )
     )
       return;
 

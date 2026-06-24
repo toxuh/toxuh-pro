@@ -15,9 +15,13 @@ interface Project {
   type: string;
   stack: string[];
   image?: string;
-  link?: string;
-  github?: string;
+  actions: ProjectAction[];
   color: string;
+}
+
+interface ProjectAction {
+  type: "project" | "github";
+  href: string;
 }
 
 const PROJECTS: Project[] = [
@@ -29,7 +33,7 @@ const PROJECTS: Project[] = [
     type: "Web App",
     image: "cf.webp",
     stack: ["Next.js", "TypeScript", "Tailwind", "Recharts", "PostgreSQL"],
-    link: "https://coinsflow.xaru.io",
+    actions: [{ type: "project", href: "https://coinsflow.xaru.io" }],
     color: "#3B82F6",
   },
   {
@@ -47,7 +51,7 @@ const PROJECTS: Project[] = [
       "PostgreSQL",
       "RAG",
     ],
-    github: "https://github.com/toxuh/desk",
+    actions: [{ type: "github", href: "https://github.com/toxuh/desk" }],
     color: "#3B82F6",
   },
   {
@@ -58,10 +62,162 @@ const PROJECTS: Project[] = [
     type: "Web App",
     image: "ap.webp",
     stack: ["Next.js", "TypeScript", "Tailwind", "Leaflet"],
-    github: "https://github.com/toxuh/opposite",
+    actions: [{ type: "github", href: "https://github.com/toxuh/opposite" }],
     color: "#3B82F6",
   },
 ];
+
+const normalizeProjectIndex = (index: number) =>
+  (index + PROJECTS.length) % PROJECTS.length;
+
+const ProjectControls = ({
+  onPrev,
+  onNext,
+}: {
+  onPrev: () => void;
+  onNext: () => void;
+}) => (
+  <div className="pointer-events-auto absolute -top-[10px] right-0 z-10 flex items-center gap-4">
+    <button onClick={onPrev} className="group" aria-label="Previous project">
+      <LongArrowLeft className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:-translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
+    </button>
+    <button onClick={onNext} className="group" aria-label="Next project">
+      <LongArrowRight className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
+    </button>
+  </div>
+);
+
+const ProjectMedia = ({ project }: { project: Project }) => (
+  <div className="w-full lg:w-[66%] xl:w-[68%]">
+    {project.image ? (
+      <Image
+        src={`/projects/${project.image}`}
+        alt={project.name}
+        className="w-full rounded-2xl"
+        width={925}
+        height={544}
+      />
+    ) : (
+      <ProjectScreenshot project={project} />
+    )}
+  </div>
+);
+
+const ViewProjectLink = ({ href }: { href: string }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="group inline-flex items-center gap-3 border border-[var(--grid-color)] px-4 py-2 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)] transition-all duration-300 hover:border-[var(--text-subtle)] hover:text-[var(--text)] md:text-xs"
+  >
+    <span>View Project</span>
+    <ExternalLink className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
+  </a>
+);
+
+const GithubLink = ({ href }: { href: string }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="group inline-flex items-center gap-3 border border-[var(--grid-color)] px-4 py-2 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)] transition-all duration-300 hover:border-[var(--text-subtle)] hover:text-[var(--text)] md:text-xs"
+  >
+    <span>GitHub</span>
+    <Github className="h-3 w-3 transition-transform duration-300 group-hover:translate-y-[-1px]" />
+  </a>
+);
+
+const ProjectActionLink = ({ action }: { action: ProjectAction }) =>
+  action.type === "project" ? (
+    <ViewProjectLink href={action.href} />
+  ) : (
+    <GithubLink href={action.href} />
+  );
+
+const ProjectActions = ({ actions }: { actions: ProjectAction[] }) => (
+  <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
+    {actions.map((action) => (
+      <ProjectActionLink
+        key={`${action.type}-${action.href}`}
+        action={action}
+      />
+    ))}
+  </div>
+);
+
+const ProjectDetails = ({ project }: { project: Project }) => (
+  <div className="flex flex-col items-center text-center lg:w-[34%] lg:items-start lg:text-left xl:w-[32%]">
+    <div className="mb-2 flex items-baseline gap-3">
+      <span
+        className="font-[family-name:var(--font-serif)] text-[clamp(2rem,5vw,4rem)] leading-none tracking-[-0.04em] text-[var(--text-subtle)]"
+        style={{ fontStyle: "italic" }}
+      >
+        {project.id}
+      </span>
+      <span className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.3em] text-[var(--text-subtle)]">
+        {project.type}
+      </span>
+    </div>
+
+    <h3 className="mb-3 font-[family-name:var(--font-mono)] text-2xl tracking-[-0.02em] text-[var(--text)] md:text-3xl">
+      {project.name}
+    </h3>
+
+    <p className="mb-4 font-[family-name:var(--font-mono)] text-xs leading-relaxed text-[var(--text-muted)] md:text-sm">
+      {project.description}
+    </p>
+
+    <ul className="mb-4 flex flex-wrap justify-center gap-2 lg:justify-start">
+      {project.stack.map((tech) => (
+        <li
+          key={tech}
+          className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.15em] text-[var(--text-subtle)] md:text-[10px]"
+        >
+          {tech}
+        </li>
+      ))}
+    </ul>
+
+    <ProjectActions actions={project.actions} />
+  </div>
+);
+
+const ProjectPagination = ({
+  activeIndex,
+  onSelect,
+}: {
+  activeIndex: number;
+  onSelect: (index: number) => void;
+}) => (
+  <nav className="flex items-center justify-between">
+    <div className="md:hidden" />
+
+    <div className="flex items-center gap-2">
+      {PROJECTS.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => onSelect(index)}
+          className={`h-px transition-all duration-300 ${
+            activeIndex === index
+              ? "w-8 bg-[var(--text)]"
+              : "w-4 bg-[var(--text-subtle)] hover:bg-[var(--text-muted)]"
+          }`}
+          aria-label={`Go to project ${index + 1}`}
+        />
+      ))}
+    </div>
+
+    <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--text-subtle)]">
+      {String(activeIndex + 1).padStart(2, "0")} /{" "}
+      {String(PROJECTS.length).padStart(2, "0")}
+    </span>
+  </nav>
+);
+
+const projectKeyOffsets: Record<string, number> = {
+  ArrowRight: 1,
+  ArrowLeft: -1,
+};
 
 const ProjectsSection = () => {
   const { ref: sectionRef, isInView: isVisible } = useInView<HTMLElement>({
@@ -74,8 +230,7 @@ const ProjectsSection = () => {
     (index: number) => {
       if (isAnimating) return;
       setIsAnimating(true);
-      const newIndex = (index + PROJECTS.length) % PROJECTS.length;
-      setActiveIndex(newIndex);
+      setActiveIndex(normalizeProjectIndex(index));
       setTimeout(() => setIsAnimating(false), 500);
     },
     [isAnimating],
@@ -86,8 +241,10 @@ const ProjectsSection = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") goTo(activeIndex + 1);
-      if (e.key === "ArrowLeft") goTo(activeIndex - 1);
+      const offset = projectKeyOffsets[e.key];
+      if (offset === undefined) return;
+
+      goTo(activeIndex + offset);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -119,133 +276,21 @@ const ProjectsSection = () => {
 
       <div className="relative flex flex-1 items-center justify-center gap-8 py-6 lg:gap-16">
         <div
-          className="relative flex max-w-7xl xl:max-w-[88rem] flex-1 flex-col items-center gap-6 lg:flex-row lg:gap-12"
+          className="relative flex max-w-7xl flex-1 flex-col items-center gap-6 lg:flex-row lg:gap-12 xl:max-w-[88rem]"
           style={{
             opacity: isVisible ? 1 : 0,
             transform: isVisible ? "translateY(0)" : "translateY(30px)",
             transition: "opacity 0.8s ease, transform 0.8s ease",
           }}
         >
-          {PROJECTS.length > 1 && (
-            <div className="pointer-events-auto absolute -top-[10px] right-0 z-10 flex items-center gap-4">
-              <button
-                onClick={goPrev}
-                className="group"
-                aria-label="Previous project"
-              >
-                <LongArrowLeft className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:-translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
-              </button>
-              <button
-                onClick={goNext}
-                className="group"
-                aria-label="Next project"
-              >
-                <LongArrowRight className="h-2.5 w-10 text-[var(--text-subtle)] transition-all duration-300 group-hover:translate-x-1 group-hover:text-[var(--text)] md:h-3 md:w-12" />
-              </button>
-            </div>
-          )}
+          <ProjectControls onPrev={goPrev} onNext={goNext} />
 
-          <div className="w-full lg:w-[66%] xl:w-[68%]">
-            {activeProject.image ? (
-              <Image
-                src={`/projects/${activeProject.image}`}
-                alt={activeProject.name}
-                className="w-full rounded-2xl"
-                width={925}
-                height={544}
-              />
-            ) : (
-              <ProjectScreenshot project={activeProject} />
-            )}
-          </div>
-
-          <div className="flex flex-col items-center text-center lg:w-[34%] xl:w-[32%] lg:items-start lg:text-left">
-            <div className="mb-2 flex items-baseline gap-3">
-              <span
-                className="font-[family-name:var(--font-serif)] text-[clamp(2rem,5vw,4rem)] leading-none tracking-[-0.04em] text-[var(--text-subtle)]"
-                style={{ fontStyle: "italic" }}
-              >
-                {activeProject.id}
-              </span>
-              <span className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.3em] text-[var(--text-subtle)]">
-                {activeProject.type}
-              </span>
-            </div>
-
-            <h3 className="mb-3 font-[family-name:var(--font-mono)] text-2xl tracking-[-0.02em] text-[var(--text)] md:text-3xl">
-              {activeProject.name}
-            </h3>
-
-            <p className="mb-4 font-[family-name:var(--font-mono)] text-xs leading-relaxed text-[var(--text-muted)] md:text-sm">
-              {activeProject.description}
-            </p>
-
-            <ul className="mb-4 flex flex-wrap justify-center gap-2 lg:justify-start">
-              {activeProject.stack.map((tech) => (
-                <li
-                  key={tech}
-                  className="font-[family-name:var(--font-mono)] text-[9px] uppercase tracking-[0.15em] text-[var(--text-subtle)] md:text-[10px]"
-                >
-                  {tech}
-                </li>
-              ))}
-            </ul>
-
-            {(activeProject.link || activeProject.github) && (
-              <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
-                {activeProject.link && (
-                  <a
-                    href={activeProject.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-3 border border-[var(--grid-color)] px-4 py-2 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)] transition-all duration-300 hover:border-[var(--text-subtle)] hover:text-[var(--text)] md:text-xs"
-                  >
-                    <span>View Project</span>
-                    <ExternalLink className="h-3 w-3 transition-transform duration-300 group-hover:translate-x-0.5" />
-                  </a>
-                )}
-                {activeProject.github && (
-                  <a
-                    href={activeProject.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-3 border border-[var(--grid-color)] px-4 py-2 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)] transition-all duration-300 hover:border-[var(--text-subtle)] hover:text-[var(--text)] md:text-xs"
-                  >
-                    <span>GitHub</span>
-                    <Github className="h-3 w-3 transition-transform duration-300 group-hover:translate-y-[-1px]" />
-                  </a>
-                )}
-              </div>
-            )}
-          </div>
+          <ProjectMedia project={activeProject} />
+          <ProjectDetails project={activeProject} />
         </div>
       </div>
 
-      {PROJECTS.length > 1 && (
-        <nav className="flex items-center justify-between">
-          <div className="md:hidden" />
-
-          <div className="flex items-center gap-2">
-            {PROJECTS.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goTo(index)}
-                className={`h-px transition-all duration-300 ${
-                  activeIndex === index
-                    ? "w-8 bg-[var(--text)]"
-                    : "w-4 bg-[var(--text-subtle)] hover:bg-[var(--text-muted)]"
-                }`}
-                aria-label={`Go to project ${index + 1}`}
-              />
-            ))}
-          </div>
-
-          <span className="font-[family-name:var(--font-mono)] text-[10px] tracking-[0.2em] text-[var(--text-subtle)]">
-            {String(activeIndex + 1).padStart(2, "0")} /{" "}
-            {String(PROJECTS.length).padStart(2, "0")}
-          </span>
-        </nav>
-      )}
+      <ProjectPagination activeIndex={activeIndex} onSelect={goTo} />
     </section>
   );
 };

@@ -18,6 +18,48 @@ const CONTACTS: Contact[] = [
   { value: "calendly.com/toxuh", href: "https://calendly.com/toxuh/30min" },
 ];
 
+const isMailLink = (href: string) => href.startsWith("mailto");
+
+const getContactClassName = (isPrimary = false) =>
+  `inline-block transition-colors duration-300 hover:text-[var(--text)] ${
+    isPrimary
+      ? "font-[family-name:var(--font-serif)] text-[clamp(2.5rem,12vw,10rem)] leading-[0.85] tracking-[-0.04em] text-[var(--text)]"
+      : "font-[family-name:var(--font-mono)] text-[clamp(1.25rem,4vw,2.5rem)] leading-[1.2] tracking-[-0.02em] text-[var(--text-muted)]"
+  }`;
+
+const getContactStyle = (isInView: boolean, index: number): CSSProperties => ({
+  opacity: isInView ? 1 : 0,
+  transform: isInView ? "translateY(0)" : "translateY(20px)",
+  transition: `all 0.8s cubic-bezier(0.16,1,0.3,1) ${index * 60}ms`,
+});
+
+const ContactLink = ({
+  contact,
+  index,
+  isInView,
+}: {
+  contact: Contact;
+  index: number;
+  isInView: boolean;
+}) => {
+  const mailLink = isMailLink(contact.href);
+
+  return (
+    <a
+      href={contact.href}
+      target={mailLink ? undefined : "_blank"}
+      rel={mailLink ? undefined : "noopener noreferrer"}
+      className={getContactClassName(contact.primary)}
+      style={{
+        ...getContactStyle(isInView, index),
+        fontStyle: contact.primary ? "italic" : undefined,
+      }}
+    >
+      {contact.value}
+    </a>
+  );
+};
+
 const ContactsSection = () => {
   const { ref, isInView } = useInView<HTMLElement>({ threshold: 0.15 });
 
@@ -44,37 +86,14 @@ const ContactsSection = () => {
       </div>
 
       <div className="flex flex-1 flex-col items-start justify-center gap-4 md:gap-6">
-        {CONTACTS.map((contact, index) => {
-          const style: CSSProperties = {
-            opacity: isInView ? 1 : 0,
-            transform: isInView ? "translateY(0)" : "translateY(20px)",
-            transition: `all 0.8s cubic-bezier(0.16,1,0.3,1) ${index * 60}ms`,
-          };
-
-          return (
-            <a
-              key={contact.value}
-              href={contact.href}
-              target={contact.href.startsWith("mailto") ? undefined : "_blank"}
-              rel={
-                contact.href.startsWith("mailto")
-                  ? undefined
-                  : "noopener noreferrer"
-              }
-              className={`inline-block transition-colors duration-300 hover:text-[var(--text)] ${
-                contact.primary
-                  ? "font-[family-name:var(--font-serif)] text-[clamp(2.5rem,12vw,10rem)] leading-[0.85] tracking-[-0.04em] text-[var(--text)]"
-                  : "font-[family-name:var(--font-mono)] text-[clamp(1.25rem,4vw,2.5rem)] leading-[1.2] tracking-[-0.02em] text-[var(--text-muted)]"
-              }`}
-              style={{
-                ...style,
-                fontStyle: contact.primary ? "italic" : undefined,
-              }}
-            >
-              {contact.value}
-            </a>
-          );
-        })}
+        {CONTACTS.map((contact, index) => (
+          <ContactLink
+            key={contact.value}
+            contact={contact}
+            index={index}
+            isInView={isInView}
+          />
+        ))}
       </div>
 
       <footer className="flex items-end justify-between">

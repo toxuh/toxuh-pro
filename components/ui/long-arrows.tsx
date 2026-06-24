@@ -26,5 +26,3 @@ export const LongArrowRight = ({ className = "" }: { className?: string }) => (
     <polyline points="38,1 44,6 38,11" />
   </svg>
 );
-
-export default LongArrowRight;
