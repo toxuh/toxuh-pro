@@ -1,12 +1,8 @@
-version: "3.9"
-
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_SITE_URL: "https://toxuh.pro"
     image: toxuh-pro:latest
     container_name: toxuh-pro
     restart: unless-stopped
@@ -14,8 +10,13 @@ services:
       NODE_ENV: "production"
       PORT: "3000"
       HOSTNAME: "0.0.0.0"
-      NEXT_PUBLIC_SITE_URL: "https://toxuh.pro"
       NEXT_TELEMETRY_DISABLED: "1"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 20s
+      retries: 3
     expose:
       - "3000"
     networks:
@@ -42,11 +43,11 @@ services:
       - "traefik.http.middlewares.toxuh-pro-redirect.redirectscheme.permanent=true"
 
       # Basic security headers
-      - "traefik.http.middlewares.secure-headers.headers.frameDeny=true"
-      - "traefik.http.middlewares.secure-headers.headers.contentTypeNosniff=true"
-      - "traefik.http.middlewares.secure-headers.headers.stsSeconds=31536000"
-      - "traefik.http.middlewares.secure-headers.headers.stsIncludeSubdomains=true"
-      - "traefik.http.routers.toxuh-pro.middlewares=secure-headers@docker"
+      - "traefik.http.middlewares.toxuh-pro-headers.headers.frameDeny=true"
+      - "traefik.http.middlewares.toxuh-pro-headers.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.toxuh-pro-headers.headers.stsSeconds=31536000"
+      - "traefik.http.middlewares.toxuh-pro-headers.headers.stsIncludeSubdomains=true"
+      - "traefik.http.routers.toxuh-pro.middlewares=toxuh-pro-headers@docker"
 
 networks:
   web:

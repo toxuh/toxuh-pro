@@ -1,7 +1,6 @@
 "use client";
 
 import { type CSSProperties } from "react";
-import { Download } from "lucide-react";
 
 import { useInView } from "@/hooks/use-in-view";
 
@@ -16,7 +15,6 @@ const CONTACTS: Contact[] = [
   { value: "github.com/toxuh", href: "https://github.com/toxuh" },
   { value: "linkedin.com/in/toxuh", href: "https://linkedin.com/in/toxuh" },
   { value: "t.me/toxuh", href: "https://t.me/toxuh" },
-  { value: "calendly.com/toxuh", href: "https://calendly.com/toxuh/30min" },
 ];
 
 const isMailLink = (href: string) => href.startsWith("mailto");
@@ -95,16 +93,6 @@ const ContactsSection = () => {
             isInView={isInView}
           />
         ))}
-        <a
-          href="/Anton-Zakharov-CV.pdf"
-          download
-          className="group inline-flex items-center mt-3.5 gap-2.5 font-mono text-[clamp(0.85rem,2vw,1.25rem)] uppercase tracking-[0.18em] text-(--text-subtle) transition-colors duration-300 hover:text-(--text)"
-          style={getContactStyle(isInView, CONTACTS.length)}
-          aria-label="Download CV as PDF"
-        >
-          Download CV
-          <Download className="h-[0.85em] w-[0.85em]" />
-        </a>
       </div>
 
       <footer className="flex items-end justify-between">

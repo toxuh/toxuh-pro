@@ -28,13 +28,13 @@ interface ProjectAction {
 const PROJECTS: Project[] = [
   {
     id: "01",
-    name: "VOZ",
+    name: "Driler FM",
     description:
-      "GEO/AEO analytics SaaS that tracks brand visibility across ChatGPT, Claude, Perplexity, and Gemini — mentions, sentiment, and share of voice",
-    type: "AI Analytics SaaS",
-    image: "voz.webp",
-    stack: ["Next.js 16", "FastAPI", "PostgreSQL", "ARQ / Redis", "Stripe", "LLMs"],
-    actions: [{ type: "project", href: "https://voz.ad" }],
+      "Music tool for live streamers — real-time on-air display, shareable playlists, and streaming/donation integrations",
+    type: "Web App",
+    image: "dfm.webp",
+    stack: ["Next.js", "PostgreSQL", "Prisma", "Node.js", "YouTube API"],
+    actions: [{ type: "project", href: "https://driler.fm" }],
     color: "#3B82F6",
   },
   {
@@ -46,28 +46,6 @@ const PROJECTS: Project[] = [
     image: "dgt.webp",
     stack: ["Next.js", "PostgreSQL", "Prisma", "Telegram API", "OpenAI"],
     actions: [{ type: "project", href: "https://t.me/spain_dgt_bot" }],
-    color: "#3B82F6",
-  },
-  {
-    id: "03",
-    name: "WriteAs",
-    description:
-      "AI writing SaaS that learns your style from uploaded samples and generates on-brand content across formats",
-    type: "AI Writing SaaS",
-    image: "writeas.webp",
-    stack: ["Next.js", "FastAPI", "Qdrant", "OpenAI", "Stripe"],
-    actions: [{ type: "project", href: "https://writeas.pro" }],
-    color: "#3B82F6",
-  },
-  {
-    id: "04",
-    name: "DFM",
-    description:
-      "Music tool for live streamers — real-time on-air display, shareable playlists, and streaming/donation integrations",
-    type: "Web App",
-    image: "dfm.webp",
-    stack: ["Next.js", "PostgreSQL", "Prisma", "Node.js", "YouTube API"],
-    actions: [{ type: "project", href: "https://driler.fm" }],
     color: "#3B82F6",
   },
 ];
